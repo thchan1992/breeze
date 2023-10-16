@@ -8,8 +8,22 @@ const ShowTasksListScreen = () => {
   //task structure =  {task: string, completed: boolean   }
 
   useEffect(() => {
-    console.log(todoList);
-  }, [todoList]);
+    const fetchData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem("to-do-list");
+        const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : null;
+        return parsedValue;
+      } catch (e) {
+        console.log("Loading failure");
+      }
+    };
+
+    fetchData().then((data) => {
+      if (data !== null) {
+        setTodoList(data);
+      }
+    });
+  }, []);
   const [todoList, setTodoList] = useState([]);
   const [task, setTask] = useState("");
 
@@ -24,15 +38,6 @@ const ShowTasksListScreen = () => {
       await AsyncStorage.setItem("to-do-list", jsonValue);
     } catch (e) {
       console.log("saving failure");
-    }
-
-    try {
-      const jsonValue = await AsyncStorage.getItem("to-do-list");
-      jsonValue != null ? JSON.parse(jsonValue) : null;
-
-      console.log(jsonValue);
-    } catch (e) {
-      console.log("loading failure");
     }
   };
 

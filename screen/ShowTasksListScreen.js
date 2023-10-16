@@ -30,7 +30,9 @@ const ShowTasksListScreen = () => {
   const taskCompletionHandler = async (i) => {
     const newArr = [...todoList];
     const completedTask = newArr[i];
-    completedTask["completed"] = true;
+    completedTask.completed == true
+      ? (completedTask["completed"] = false)
+      : (completedTask["completed"] = true);
     newArr.splice(i, 1);
     newArr.push(completedTask);
     setTodoList(newArr);
@@ -43,6 +45,7 @@ const ShowTasksListScreen = () => {
     newArr.push(newTask);
     setTodoList(newArr);
     await storeData();
+    setTask("");
   };
 
   const storeData = async () => {
@@ -52,6 +55,13 @@ const ShowTasksListScreen = () => {
     } catch (e) {
       console.log("saving failure");
     }
+  };
+
+  const taskDeletionHandler = async (i) => {
+    const newArr = [...todoList];
+    newArr.splice(i, 1);
+    setTodoList(newArr);
+    await storeData();
   };
 
   return (
@@ -66,16 +76,23 @@ const ShowTasksListScreen = () => {
       />
       {todoList.map((obj, i) => {
         return (
-          <TouchableOpacity
-            key={i}
-            onPress={() => {
-              taskCompletionHandler(i);
-            }}
-          >
-            <Text>
-              {obj.task} {obj.completed ? "completed" : "incompleted"}
-            </Text>
-          </TouchableOpacity>
+          <View key={i}>
+            <TouchableOpacity
+              onPress={() => {
+                taskCompletionHandler(i);
+              }}
+            >
+              <Text>
+                {obj.task} {obj.completed ? "completed" : "incompleted"}
+              </Text>
+            </TouchableOpacity>
+            <PrimaryButton
+              text={"x"}
+              onPress={(i) => {
+                taskDeletionHandler(i);
+              }}
+            />
+          </View>
         );
       })}
     </View>

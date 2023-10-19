@@ -14,10 +14,13 @@ import PrimaryButton from "../components/PrimaryButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PrimaryTextInput from "../components/PrimaryTextInput";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import TaskItem from "../components/TaskItem";
 
 const ShowTasksListScreen = () => {
   //task structure =  {task: string, completed: boolean   }
 
+  const [todoList, setTodoList] = useState([]);
+  const [task, setTask] = useState("");
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
   const shadowStyle = Platform.select({
@@ -31,7 +34,9 @@ const ShowTasksListScreen = () => {
       elevation: 5,
     },
   });
+
   useEffect(() => {
+    //get the data from the local storage when it loads
     const fetchData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem("to-do-list");
@@ -41,16 +46,14 @@ const ShowTasksListScreen = () => {
         console.log("Loading failure");
       }
     };
-
     fetchData().then((data) => {
       if (data !== null) {
         setTodoList(data);
       }
     });
   }, []);
-  const [todoList, setTodoList] = useState([]);
-  const [task, setTask] = useState("");
 
+  //handle task completion
   const taskCompletionHandler = async (i) => {
     const newArr = [...todoList];
     const completedTask = newArr[i];
@@ -63,6 +66,7 @@ const ShowTasksListScreen = () => {
     await storeData();
   };
 
+  //handle task addition
   const taskAdditionHandler = async () => {
     const newTask = { task: task, completed: false };
     const newArr = [...todoList];
@@ -81,6 +85,7 @@ const ShowTasksListScreen = () => {
     }
   };
 
+  //handle task deletion
   const taskDeletionHandler = async (i) => {
     Alert.alert(
       "Delete a task",
@@ -107,25 +112,33 @@ const ShowTasksListScreen = () => {
     );
   };
 
+  const emptyStringHandler = () => {
+    Alert.alert("No task detected", "Please make sure the task is not empty", [
+      { text: "OK" },
+    ]);
+  };
+
   return (
     <View>
       <SafeAreaView
-        style={{
-          width: windowWidth,
-          height: windowHeight,
-          justifyContent: "space-between",
-        }}
+        style={[
+          {
+            width: windowWidth,
+            height: windowHeight,
+          },
+          styles.container,
+        ]}
       >
         <View style={{ padding: 7 }}>
           <Text>Breeze - To do List:</Text>
-          <View style={{ padding: 5, flexDirection: "row" }}>
-            <View style={{ flex: 3 }}>
+          <View style={styles.inputContainer}>
+            <View style={styles.textInputContainer}>
               <PrimaryTextInput setText={setTask} text={task} />
             </View>
-            <View style={{ flex: 1, height: 40, paddingLeft: 5 }}>
+            <View style={styles.buttonContainer}>
               <PrimaryButton
                 onPress={() => {
-                  taskAdditionHandler();
+                  task !== "" ? taskAdditionHandler() : emptyStringHandler();
                 }}
                 text={"Add task"}
               />
@@ -141,62 +154,13 @@ const ShowTasksListScreen = () => {
           >
             {todoList.map((obj, i) => {
               return (
-                <View
-                  key={i}
-                  style={{
-                    padding: 10,
-                    flexDirection: "row",
-                  }}
-                >
-                  <View
-                    style={[
-                      {
-                        flex: 4,
-                        borderBottomColor: "grey",
-                        borderBottomWidth: 1,
-                        borderRadius: 5,
-                      },
-                    ]}
-                  >
-                    <TouchableOpacity
-                      onLongPress={() => {
-                        taskCompletionHandler(i);
-                      }}
-                    >
-                      {obj.completed ? (
-                        <Text
-                          style={{
-                            textDecorationLine: "line-through",
-                          }}
-                        >
-                          {obj.task}
-                        </Text>
-                      ) : (
-                        <Text>{obj.task}</Text>
-                      )}
-                    </TouchableOpacity>
-                  </View>
-                  <View style={[{ flex: 0.5, paddingLeft: 5 }]}>
-                    <TouchableOpacity
-                      onPress={(i) => {
-                        taskDeletionHandler(i);
-                      }}
-                    >
-                      <AntDesign name="delete" size={24} color="black" />
-                    </TouchableOpacity>
-                  </View>
-                  <BouncyCheckbox
-                    style={shadowStyle}
-                    disableBuiltInState
-                    size={20}
-                    fillColor="red"
-                    unfillColor="#FFFFFF"
-                    iconStyle={{ borderColor: "red" }}
-                    innerIconStyle={{ borderWidth: 2 }}
-                    isChecked={obj.completed}
-                    onPress={() => {
-                      taskCompletionHandler(i);
-                    }}
+                <View key={i}>
+                  <TaskItem
+                    i={i}
+                    shadowStyle={shadowStyle}
+                    obj={obj}
+                    taskCompletionHandler={taskCompletionHandler}
+                    taskDeletionHandler={taskDeletionHandler}
                   />
                 </View>
               );
@@ -213,5 +177,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  container: {
+    justifyContent: "space-between",
+  },
+  inputContainer: { padding: 5, flexDirection: "row" },
+  textInputContainer: { flex: 3 },
+  buttonContainer: { flex: 1, height: 40, paddingLeft: 5 },
 });
 export default ShowTasksListScreen;

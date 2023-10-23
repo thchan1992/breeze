@@ -53,8 +53,8 @@ const TaskItem = ({
         </View>
         <View style={[{ flex: 0.5, paddingLeft: 5 }]}>
           <TouchableOpacity
-            onPress={(i) => {
-              taskDeletionHandler(i);
+            onPress={() => {
+              taskDeletionHandler(obj.id);
             }}
           >
             <AntDesign name="delete" size={24} color="black" />
@@ -69,7 +69,7 @@ const TaskItem = ({
           innerIconStyle={{ borderWidth: 2 }}
           isChecked={obj.completed}
           onPress={() => {
-            taskCompletionHandler(i);
+            taskCompletionHandler(obj.id);
           }}
         />
       </View>

@@ -1,6 +1,7 @@
 **Breeze To-Do List App**
 
-Breeze To-Do List is a simple, mobile to-do list application built with React Native. This app allows you to create, manage, and organise your tasks effectively.
+Breeze To-Do List is a simple, mobile to-do list application built with expo React Native and Google Firebase. This app allows you to create, manage, and organise your tasks effectively.
+
 ![Screenshot 2023-10-23 at 20 57 58](https://github.com/thchan1992/breeze/assets/45675385/bbca56ee-0624-4de1-a576-c61205958054)
 
 **Features**

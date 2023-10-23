@@ -1,8 +1,14 @@
 **Breeze To-Do List App**
 
+![Screenshot 2023-10-23 at 20 57 58](https://github.com/thchan1992/breeze/assets/45675385/bbca56ee-0624-4de1-a576-c61205958054)
+
+
+
 Breeze To-Do List is a simple, mobile to-do list application built with React Native. This app allows you to create, manage, and organise your tasks effectively.
 
+
 **Features**
+
 - Add new tasks to your to-do list.
 - Mark tasks as completed.
 - Delete tasks.
@@ -10,9 +16,11 @@ Breeze To-Do List is a simple, mobile to-do list application built with React Na
 - User-friendly and intuitive interface.
 
 **Getting Started**
+
 Follow these instructions to get the Breeze To-Do List app up and running on your local machine.
 
 **Prerequisites**
+
 Node.js and npm (Node Package Manager) installed on your computer.
 Expo CLI. If you don't have Expo CLI, you can install it globally by running: npm install -g expo-cli.
 
